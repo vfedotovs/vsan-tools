@@ -1,0 +1,18 @@
+UUID: 52263fd2-b355-d86c-9626-c4f994df23e5:
+   Name: mpx.vmhba3:C0:T0:L0
+   Owner: esx70u3-82.home
+   Version: 15
+   Disk Group: 52479cb3-1140-2da0-8d89-a77a19d08f00
+   Disk Tier: Capacity
+   SSD: true
+   In Cmmds: true
+   In Vsi: true
+   Fault Domain: N/A
+   Model: Virtual disk
+   Encryption: false
+   Compression: true
+   Deduplication: false
+   Dedup Ratio: 3.30x
+   Overall Health: green
+   Metadata Health: green
+   Operational Health: green

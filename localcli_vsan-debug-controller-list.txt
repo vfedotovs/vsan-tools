@@ -1,0 +1,71 @@
+Device Name: vmhba0:
+   Device Display Name: VMware Inc. PVSCSI SCSI Controller
+   Used By VSAN: false
+   PCI ID: 15ad/07c0/15ad/07c0
+   Driver Name: pvscsi
+   Driver Version: 0.1-4vmw.703.0.0.18631445
+   Max Supported Queue Depth: 1024
+Error getting field  Firmware Version
+
+Device Name: vmhba1:
+   Device Display Name: Intel Corporation PIIX4 for 430TX/440BX/MX IDE Controller
+   Used By VSAN: false
+   PCI ID: 8086/7111/15ad/1976
+   Driver Name: vmkata
+   Driver Version: 0.1-1vmw.703.0.0.18631445
+   Max Supported Queue Depth: 1
+Error getting field  Firmware Version
+
+Device Name: vmhba2:
+   Device Display Name: VMware Inc. PVSCSI SCSI Controller
+   Used By VSAN: true
+   PCI ID: 15ad/07c0/15ad/07c0
+   Driver Name: pvscsi
+   Driver Version: 0.1-4vmw.703.0.0.18631445
+   Max Supported Queue Depth: 1024
+Error getting field  Firmware Version
+
+Device Name: vmhba3:
+   Device Display Name: VMware Inc. PVSCSI SCSI Controller
+   Used By VSAN: true
+   PCI ID: 15ad/07c0/15ad/07c0
+   Driver Name: pvscsi
+   Driver Version: 0.1-4vmw.703.0.0.18631445
+   Max Supported Queue Depth: 1024
+Error getting field  Firmware Version
+
+Device Name: vmhba64:
+   Device Display Name: Intel Corporation PIIX4 for 430TX/440BX/MX IDE Controller
+   Used By VSAN: false
+   PCI ID: 8086/7111/15ad/1976
+   Driver Name: vmkata
+   Driver Version: 0.1-1vmw.703.0.0.18631445
+   Max Supported Queue Depth: 1
+Error getting field  Firmware Version
+
+Device Name: vmhba0:
+   Device Display Name: Intel Corporation Lewisburg SATA AHCI Controller
+   Used By VSAN: false
+   PCI ID: 8086/a1d2/1137/0101
+   Driver Name: vmw_ahci
+   Driver Version: 2.0.11-1vmw.703.0.20.19193900
+   Max Supported Queue Depth: 992
+Error getting field  Firmware Version
+
+Device Name: vmhba1:
+   Device Display Name: Broadcom Cisco 12G Modular Raid Controller with 2GB cache
+   Used By VSAN: true
+   PCI ID: 1000/0014/1137/020e
+   Driver Name: lsi_mr3
+   Driver Version: 7.719.02.00-1OEM.700.1.0.15843807
+   Max Supported Queue Depth: 4065
+Error getting field  Firmware Version
+
+Device Name: vmhba32:
+   Device Display Name: None
+   Used By VSAN: false
+   PCI ID:
+   Driver Name: vmkusb
+   Driver Version: 0.1-6vmw.703.0.20.19193900
+   Max Supported Queue Depth: 1
+Error getting field  Firmware Version

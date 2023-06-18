@@ -1,0 +1,99 @@
+DiskResults:
+      DiskResult[0]:
+            Name:  naa.55cd2e41531a3866
+        VSANUUID:  52fac6be-ba93-a00a-1a70-6fe714e1a880
+           State:  In-use for VSAN
+          Reason:  None
+ StoragePoolState: Ineligible for use by Storage Pool
+ StoragePoolReason:Disk in use by disk group
+          IsSSD?:  1
+IsCapacityFlash?:  0
+          IsPDL?:  0
+        Size(MB):  915715
+      FormatType:  512e
+   IsVsanDirectDisk?:  0
+
+      DiskResult[1]:
+            Name:  naa.55cd2e404c210904
+        VSANUUID:  521daad0-dd19-8c92-3f34-b4364411e00f
+           State:  In-use for VSAN
+          Reason:  None
+ StoragePoolState: Ineligible for use by Storage Pool
+ StoragePoolReason:Disk in use by disk group
+          IsSSD?:  1
+IsCapacityFlash?:  1
+          IsPDL?:  0
+        Size(MB):  763097
+      FormatType:  512e
+   IsVsanDirectDisk?:  0
+
+      DiskResult[2]:
+            Name:  t10.ATA_____SATA_SSD________________________________AF34075A1A2400165653
+        VSANUUID:  
+           State:  Ineligible for use by VSAN
+          Reason:  Has partitions
+ StoragePoolState: Ineligible for use by Storage Pool
+ StoragePoolReason:Has partitions
+          IsSSD?:  1
+IsCapacityFlash?:  0
+          IsPDL?:  0
+        Size(MB):  15272
+      FormatType:  512n
+   IsVsanDirectDisk?:  0
+
+      DiskResult[3]:
+            Name:  naa.55cd2e404c20fe0c
+        VSANUUID:  5218de6f-78b8-ca00-b09d-9fa5bde583df
+           State:  In-use for VSAN
+          Reason:  None
+ StoragePoolState: Ineligible for use by Storage Pool
+ StoragePoolReason:Disk in use by disk group
+          IsSSD?:  1
+IsCapacityFlash?:  1
+          IsPDL?:  0
+        Size(MB):  763097
+      FormatType:  512e
+   IsVsanDirectDisk?:  0
+
+      DiskResult[4]:
+            Name:  naa.55cd2e404c2108f7
+        VSANUUID:  5296b211-9bdd-2838-8c48-221e50322688
+           State:  In-use for VSAN
+          Reason:  None
+ StoragePoolState: Ineligible for use by Storage Pool
+ StoragePoolReason:Disk in use by disk group
+          IsSSD?:  1
+IsCapacityFlash?:  1
+          IsPDL?:  0
+        Size(MB):  763097
+      FormatType:  512e
+   IsVsanDirectDisk?:  0
+
+      DiskResult[5]:
+            Name:  naa.55cd2e404c2108bf
+        VSANUUID:  5228a989-dc6e-9172-a8a8-7b5588ac3f65
+           State:  In-use for VSAN
+          Reason:  None
+ StoragePoolState: Ineligible for use by Storage Pool
+ StoragePoolReason:Disk in use by disk group
+          IsSSD?:  1
+IsCapacityFlash?:  1
+          IsPDL?:  0
+        Size(MB):  763097
+      FormatType:  512e
+   IsVsanDirectDisk?:  0
+
+      DiskResult[6]:
+            Name:  naa.55cd2e404c2133d6
+        VSANUUID:  5288af70-41fe-9ef3-d6ac-5d443faad5cc
+           State:  In-use for VSAN
+          Reason:  None
+ StoragePoolState: Ineligible for use by Storage Pool
+ StoragePoolReason:Disk in use by disk group
+          IsSSD?:  1
+IsCapacityFlash?:  1
+          IsPDL?:  0
+        Size(MB):  763097
+      FormatType:  512e
+   IsVsanDirectDisk?:  0
+
