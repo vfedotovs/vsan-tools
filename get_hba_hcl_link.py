@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import json
 import os
-
+import re
 
 # Check if the JSON file exists
 json_file = 'all.json'
@@ -45,5 +45,31 @@ def get_hba_link(hcl_data, cont_list_len: int, hba_pci_id: str) -> str:
 hba_id_to_check = "1111/2222/3333/4444"
 real_hba = "1000/0014/1137/020e"
 
+
+
+def get_valid_input():
+    # Define the regular expression pattern for 4 alphanumeric characters in each section
+    pattern = r'^[a-zA-Z0-9]{4}/[a-zA-Z0-9]{4}/[a-zA-Z0-9]{4}/[a-zA-Z0-9]{4}$'
+    
+    while True:
+        user_input = input("Please enter the input in format XXXX/XXXX/XXXX/XXXX: ").strip()
+        
+        # Check if the input matches the required pattern
+        if re.match(pattern, user_input):
+            print("Valid input received:", user_input)
+            return user_input
+        else:
+            print("Invalid input. Each section must contain exactly 4 alphanumeric characters. Please try again.")
+
+# Call the function to prompt the user for input
+
+
 print(get_hba_link(data, cont_list_len, hba_id_to_check))
+print("Example of real controller ID:  VID/DID/SVID/SSID")
 print(get_hba_link(data, cont_list_len, real_hba))
+device_to_check = get_valid_input()
+print(get_hba_link(data, cont_list_len, device_to_check))
+
+
+
+
