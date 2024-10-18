@@ -65,8 +65,14 @@ def get_hba_link(hcl_data, cont_list_len: int, hba_pci_id: str) -> str:
 
 def get_device_link(hcl_data, dev_list_len: int, dev_pci_id: str, dev_type: str) -> str:
     for i in range(dev_list_len - 1):
-        vid = data['data'][dev_type][i]['vid']
-        did = data['data'][dev_type][i]['did']
+        vid = data['data'][dev_type][i].get('vid')
+        if vid is None:
+            # print(f"Skipping device at index {i}, 'vid' not found")
+            continue  # Skip to the next iteration
+        did = data['data'][dev_type][i].get('did')
+        if did is None:
+            # print(f"Skipping device at index {i}, 'vid' not found")
+            continue  # Skip to the next iteration
         ssid = data['data'][dev_type][i]['ssid']
         svid = data['data'][dev_type][i]['svid']
         device_vcg_link = data['data'][dev_type][i]['vcglink']
