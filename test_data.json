@@ -1,0 +1,68 @@
+{
+  "data": {
+    "controller": [
+      {
+        "vid": "1000",
+        "did": "0014",
+        "ssid": "020e",
+        "svid": "1137",
+        "vcglink": "http://www.vmware.com/resources/compatibility/detail.php?deviceCategory=rdmanic&productid=52097"
+      },
+      {
+        "vid": "15b3",
+        "did": "101f",
+        "ssid": "0014",
+        "svid": "15b3",
+        "vcglink": "http://www.vmware.com/resources/compatibility/detail.php?deviceCategory=rdmanic&productid=52098"
+      },
+      {
+        "vid": "15ad",
+        "did": "07c0",
+        "ssid": "07c0",
+        "svid": "15ad",
+        "vcglink": "http://www.vmware.com/resources/compatibility/detail.php?deviceCategory=rdmanic&productid=52099"
+      }
+    ],
+    "ssd": [
+      {
+        "vid": "8086",
+        "did": "a1d2",
+        "ssid": "0101",
+        "svid": "1137",
+        "vcglink": "http://www.vmware.com/resources/compatibility/detail.php?deviceCategory=ssd&productid=52100"
+      },
+      {
+        "vid": "15ad",
+        "did": "07c0",
+        "ssid": "07c0",
+        "svid": "15ad",
+        "vcglink": "http://www.vmware.com/resources/compatibility/detail.php?deviceCategory=ssd&productid=52101"
+      }
+    ],
+    "hdd": [
+      {
+        "vid": "15ad",
+        "did": "07c0",
+        "ssid": "07c0",
+        "svid": "15ad",
+        "vcglink": "http://www.vmware.com/resources/compatibility/detail.php?deviceCategory=hdd&productid=52102"
+      }
+    ],
+    "nic": [
+      {
+        "vid": "8086",
+        "did": "7111",
+        "ssid": "1976",
+        "svid": "15ad",
+        "vcglink": "http://www.vmware.com/resources/compatibility/detail.php?deviceCategory=nic&productid=52103"
+      },
+      {
+        "vid": "1000",
+        "did": "0014",
+        "ssid": "020e",
+        "svid": "1137",
+        "vcglink": "http://www.vmware.com/resources/compatibility/detail.php?deviceCategory=nic&productid=52104"
+      }
+    ]
+  }
+}
