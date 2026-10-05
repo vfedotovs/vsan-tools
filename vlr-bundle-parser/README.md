@@ -10,10 +10,11 @@ See [how_to_use.md](../how_to_use.md) for what each section reports.
 
 ## Run it
 
-Using the published image:
+Using the published image (public, linux/amd64 and linux/arm64), from either registry:
 
 ```bash
-docker run --rm -p 8080:8080 ghcr.io/vfedotovs/vlr-bundle-parser:latest
+docker run --rm -p 8080:8080 vfedotovsdocker/vlr-bundle-parser:latest     # Docker Hub
+docker run --rm -p 8080:8080 ghcr.io/vfedotovs/vlr-bundle-parser:latest   # GitHub Container Registry
 # open http://localhost:8080
 ```
 
