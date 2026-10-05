@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VLR Bundle Parser</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #fff; --text: #1d2228; --muted: #5d6773;
+    --border: #d9dde3; --accent: #1f6feb; --accent-text: #fff;
+    --ok: #1a7f37; --err: #cf222e; --pre: #f0f2f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1216; --panel: #171b21; --text: #e6e9ed; --muted: #98a2ae;
+      --border: #2c333c; --accent: #4493f8; --accent-text: #0f1216;
+      --ok: #3fb950; --err: #f85149; --pre: #0b0e12;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  section { background: var(--panel); border: 1px solid var(--border);
+            border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+  h2 { font-size: 15px; margin: 0 0 12px; }
+  button { font: inherit; padding: 7px 14px; border-radius: 6px; cursor: pointer;
+           border: 1px solid var(--border); background: var(--panel); color: var(--text); }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+          gap: 10px; margin-bottom: 14px; }
+  label { display: flex; flex-direction: column; font-size: 13px; color: var(--muted); gap: 3px; }
+  label.check { flex-direction: row; align-items: center; gap: 6px; }
+  input[type=text], input[type=date], input[type=number] {
+    font: inherit; padding: 6px 8px; border: 1px solid var(--border);
+    border-radius: 6px; background: var(--bg); color: var(--text); }
+  progress { width: 100%; height: 10px; margin-top: 10px; }
+  .status { margin-top: 8px; font-size: 14px; color: var(--muted); min-height: 1.5em; }
+  .status.err { color: var(--err); } .status.ok { color: var(--ok); }
+  pre { background: var(--pre); border: 1px solid var(--border); border-radius: 6px;
+        padding: 12px; overflow: auto; max-height: 70vh; font-size: 12.5px; line-height: 1.4;
+        margin: 10px 0 0; white-space: pre; }
+  pre.warn { max-height: 200px; color: var(--muted); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>VLR Bundle Parser</h1>
+  <p class="sub">Offline analysis of VMware Live Recovery 9.0.3–9.0.5 appliance support bundles with <code>vlr_sbp.sh</code>.</p>
+
+  <section>
+    <h2>1. Upload support bundle</h2>
+    <div class="row">
+      <input type="file" id="file" accept=".zip,.tgz,.tar,.gz">
+      <button class="primary" id="uploadBtn" disabled>Upload</button>
+      <button id="deleteBtn" hidden>Delete bundle</button>
+    </div>
+    <progress id="progress" max="100" value="0" hidden></progress>
+    <div class="status" id="uploadStatus">.zip, .tar.gz, .tgz or .tar, up to {{ max_upload_mb }} MiB.</div>
+  </section>
+
+  <section id="runPanel" hidden>
+    <h2>2. Run parser</h2>
+    <div class="opts">
+      <label>From (health, workflows, certificates)<input type="date" id="from"></label>
+      <label>To<input type="date" id="to"></label>
+      <label>Log path regex (coverage, health)<input type="text" id="log" placeholder="srm/|hms/"></label>
+      <label>Top N rows (health)<input type="number" id="top" min="1" placeholder="15"></label>
+      <label class="check"><input type="checkbox" id="allDays"> All days / all tasks</label>
+    </div>
+    <div class="row" id="sectionButtons">
+      <button class="primary" data-section="all">Run all sections</button>
+      {% for s in sections %}<button data-section="{{ s }}">{{ s }}</button>
+      {% endfor %}
+    </div>
+    <div class="status" id="runStatus"></div>
+  </section>
+
+  <section id="reportPanel" hidden>
+    <div class="row" style="justify-content: space-between">
+      <h2 id="reportTitle" style="margin:0">Report</h2>
+      <a id="downloadLink" download><button class="primary">Download .md</button></a>
+    </div>
+    <pre id="report"></pre>
+    <details id="warnBox" hidden><summary>Warnings (stderr)</summary><pre class="warn" id="warnings"></pre></details>
+  </section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let job = null;
+
+function setStatus(el, msg, cls) { el.textContent = msg; el.className = "status " + (cls || ""); }
+
+$("file").addEventListener("change", () => {
+  const f = $("file").files[0];
+  const tooBig = f && f.size > {{ max_upload_mb }} * 1024 * 1024;
+  $("uploadBtn").disabled = !f || tooBig;
+  if (tooBig) setStatus($("uploadStatus"), "File is larger than {{ max_upload_mb }} MiB.", "err");
+  else if (f) setStatus($("uploadStatus"), f.name + " – " + (f.size / 1048576).toFixed(1) + " MiB");
+});
+
+$("uploadBtn").addEventListener("click", () => {
+  const f = $("file").files[0];
+  const fd = new FormData(); fd.append("bundle", f);
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/upload");
+  $("uploadBtn").disabled = true; $("progress").hidden = false; $("progress").value = 0;
+  xhr.upload.onprogress = e => {
+    if (!e.lengthComputable) return;
+    $("progress").value = e.loaded / e.total * 100;
+    setStatus($("uploadStatus"), e.loaded < e.total
+      ? "Uploading… " + Math.round(e.loaded / e.total * 100) + "%"
+      : "Extracting bundle…");
+  };
+  xhr.onload = () => {
+    $("progress").hidden = true; $("uploadBtn").disabled = false;
+    let r; try { r = JSON.parse(xhr.responseText); } catch { r = { error: "HTTP " + xhr.status }; }
+    if (xhr.status !== 200) return setStatus($("uploadStatus"), r.error || "Upload failed.", "err");
+    job = r.job;
+    setStatus($("uploadStatus"), "Ready: " + r.filename + " (" + r.size_mb + " MiB extracted)", "ok");
+    $("runPanel").hidden = false; $("deleteBtn").hidden = false; $("reportPanel").hidden = true;
+  };
+  xhr.onerror = () => { $("progress").hidden = true; $("uploadBtn").disabled = false;
+    setStatus($("uploadStatus"), "Upload failed (network error).", "err"); };
+  xhr.send(fd);
+});
+
+$("deleteBtn").addEventListener("click", async () => {
+  if (!job) return;
+  await fetch("/jobs/" + job, { method: "DELETE" });
+  job = null;
+  $("runPanel").hidden = true; $("reportPanel").hidden = true; $("deleteBtn").hidden = true;
+  setStatus($("uploadStatus"), "Bundle deleted from the server.");
+});
+
+$("sectionButtons").addEventListener("click", async e => {
+  const btn = e.target.closest("button[data-section]");
+  if (!btn || !job) return;
+  const section = btn.dataset.section;
+  const buttons = document.querySelectorAll("#sectionButtons button");
+  buttons.forEach(b => b.disabled = true);
+  setStatus($("runStatus"), "Running " + section + "… (certificates and full runs can take a minute)");
+  const t0 = performance.now();
+  try {
+    const res = await fetch("/jobs/" + job + "/run", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ section, from: $("from").value, to: $("to").value,
+        log: $("log").value, top: $("top").value, all_days: $("allDays").checked })
+    });
+    const r = await res.json();
+    if (!res.ok) { setStatus($("runStatus"), r.error || "Run failed.", "err"); return; }
+    const secs = ((performance.now() - t0) / 1000).toFixed(1);
+    setStatus($("runStatus"), "Finished " + section + " in " + secs + " s, exit code " + r.rc,
+              r.rc === 0 ? "ok" : "err");
+    $("reportTitle").textContent = "Report – " + section;
+    $("report").textContent = r.stdout || "(no output)";
+    $("warnings").textContent = r.stderr;
+    $("warnBox").hidden = !r.stderr.trim();
+    $("downloadLink").href = r.md_url;
+    $("reportPanel").hidden = false;
+  } catch (err) {
+    setStatus($("runStatus"), "Run failed: " + err, "err");
+  } finally {
+    buttons.forEach(b => b.disabled = false);
+  }
+});
+</script>
+</body>
+</html>
