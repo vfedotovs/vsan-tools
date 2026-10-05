@@ -1,7 +1,8 @@
 name: vlr-bundle-parser image
 
-# Builds the VLR bundle parser web UI and publishes it to
-# ghcr.io/vfedotovs/vlr-bundle-parser (linux/amd64 + linux/arm64).
+# Builds the VLR bundle parser web UI (linux/amd64 + linux/arm64) and publishes it to
+#   ghcr.io/vfedotovs/vlr-bundle-parser
+#   docker.io/vfedotovsdocker/vlr-bundle-parser  (only when the DOCKERHUB_TOKEN secret is set)
 on:
   push:
     branches: [main]
@@ -14,9 +15,17 @@ permissions:
   contents: read
   packages: write
 
+env:
+  GHCR_IMAGE: ghcr.io/vfedotovs/vlr-bundle-parser
+  DOCKERHUB_USER: vfedotovsdocker
+  DOCKERHUB_IMAGE: docker.io/vfedotovsdocker/vlr-bundle-parser
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # secrets can't be tested in `if:` directly, so expose whether it is set
+      HAS_DOCKERHUB: ${{ secrets.DOCKERHUB_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
@@ -26,15 +35,33 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/login-action@v3
+        if: env.HAS_DOCKERHUB == 'true'
+        with:
+          username: ${{ env.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Image tags
+        id: tags
+        run: |
+          {
+            echo "list<<EOF"
+            echo "$GHCR_IMAGE:latest"
+            echo "$GHCR_IMAGE:${{ github.sha }}"
+            if [ "$HAS_DOCKERHUB" = true ]; then
+              echo "$DOCKERHUB_IMAGE:latest"
+              echo "$DOCKERHUB_IMAGE:${{ github.sha }}"
+            else
+              echo "::warning::DOCKERHUB_TOKEN secret not set - skipping the Docker Hub push" >&2
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
       - uses: docker/build-push-action@v6
         with:
           context: vlr-bundle-parser
           file: vlr-bundle-parser/web/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ghcr.io/vfedotovs/vlr-bundle-parser:latest
-            ghcr.io/vfedotovs/vlr-bundle-parser:${{ github.sha }}
+          tags: ${{ steps.tags.outputs.list }}
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.description=Web UI for parsing VMware Live Recovery 9.0.x appliance support bundles
